@@ -24,14 +24,17 @@ class MLDataPrepApp:
     def __init__(self, root):
         self.root = root
         self.root.title('Projekt')
-        self.root.geometry('400x150')
-        self.file_path = ''  # Zmienna na ścieżkę pliku
-
+        self.root.geometry('400x300')
+        self.initial_data_file_path = ''
+        self.test_data_file_path = ''
         self.create_widgets()
 
     def create_widgets(self):
-        self.choose_file_button = ttk.Button(self.root, text='Wybierz plik', command=self.choose_file)
-        self.choose_file_button.pack(pady=10)
+        self.choose_initial_data_button = ttk.Button(self.root, text='Wybierz dane początkowe',command=self.choose_initial_data)
+        self.choose_initial_data_button.pack(pady=10)
+
+        self.choose_test_data_button = ttk.Button(self.root, text='Wybierz dane testowe', command=self.choose_test_data)
+        self.choose_test_data_button.pack(pady=10)
 
         self.fill_method_label = ttk.Label(self.root, text='Wybierz metodę uzupełniania:')
         self.fill_method_label.pack()
@@ -44,16 +47,28 @@ class MLDataPrepApp:
         self.run_analysis_button = ttk.Button(self.root, text='Uruchom analizę', command=self.run_analysis)
         self.run_analysis_button.pack(pady=10)
 
-    def choose_file(self):
-        file_path = filedialog.askopenfilename()
-        if file_path:
-            self.file_path = file_path  # Przechowaj wybraną ścieżkę pliku
-            messagebox.showinfo("Wybrany plik", f"Ścieżka do pliku: {file_path}")
+    def choose_initial_data(self):
+        choose_initial_data = filedialog.askopenfilename()
+        if choose_initial_data:
+            self.initial_data_file_path = choose_initial_data
+            messagebox.showinfo("Wybrany plik", f"Ścieżka do pliku: {choose_initial_data}")
+        else:
+            messagebox.showerror("Błąd", "Nie wybrano pliku.")
+
+    def choose_test_data(self):
+        choose_test_data = filedialog.askopenfilename()
+        if choose_test_data:
+            self.test_data_file_path = choose_test_data
+            messagebox.showinfo("Wybrany plik", f"Ścieżka do pliku: {choose_test_data}")
         else:
             messagebox.showerror("Błąd", "Nie wybrano pliku.")
 
     def run_analysis(self):
-        if not self.file_path:
+        if not self.initial_data_file_path:
+            messagebox.showerror("Błąd", "Nie wybrano pliku.")
+            return
+
+        if not self.test_data_file_path:
             messagebox.showerror("Błąd", "Nie wybrano pliku.")
             return
 
@@ -65,8 +80,8 @@ class MLDataPrepApp:
         gpus = tf.config.list_physical_devices('GPU')
         gpus
 
-        normal_df = pd.read_csv(self.file_path).iloc[:, :-1]
-        anomaly_df = pd.read_csv("ptbdb_abnormal.csv").iloc[:, :-1]
+        normal_df = pd.read_csv(self.initial_data_file_path).iloc[:, :-1]
+        anomaly_df = pd.read_csv(self.test_data_file_path).iloc[:, :-1]
 
         print("Shape of Normal data", normal_df.shape)
         print("Shape of Abnormal data", anomaly_df.shape)
