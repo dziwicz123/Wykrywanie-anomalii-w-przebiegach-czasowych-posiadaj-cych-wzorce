@@ -17,6 +17,13 @@ class convolutionalNeuralNetwork:
         self.num_classes = num_classes
         self.model = None
 
+    def __init__(self, model_path=None):
+        if model_path:
+            self.model = load_model(model_path)
+            print(f"Model loaded from {model_path}")
+        else:
+            self.model = None
+
     @staticmethod
     def estimate_parameters(data):
         num_samples, num_features = data.shape
@@ -76,6 +83,18 @@ def save_label_mapping(label_encoder, output_path):
 
     with open(output_path, 'w') as json_file:
         json.dump(label_mapping, json_file, indent=4)
+
+def load_label_mapping(file_path):
+    with open(file_path, 'r') as json_file:
+        label_mapping = json.load(json_file)
+    return label_mapping
+
+def convert_labels_to_one_hot(labels, label_mapping):
+    num_classes = len(label_mapping)
+    one_hot_labels = np.zeros((len(labels), num_classes))
+    for i, label in enumerate(labels):
+        one_hot_labels[i] = label_mapping[label]
+    return one_hot_labels
 
 if __name__ == "__main__":
     data_path = 'ekg_dataset.csv'
