@@ -26,7 +26,10 @@ def change_state(canvas, text_id, variable):
         variable.set(0)
 
 def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_labeled_in_first_col, is_labeled):
-    data = pd.read_csv(file_dir)
+    file_path = file_dir.get()
+    data = pd.read_csv(file_path)
+
+    folder_path = model_dir.get()
 
     if is_labeled.get() == 1:
         if is_labeled_in_first_col.get() == 1:
@@ -36,7 +39,7 @@ def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_label
             y = data.iloc[:, -1].values
             X = data.drop(data.columns[-1], axis=1).values
 
-        label_mapping_path = f'{model_dir}/label_mapping.json'
+        label_mapping_path = f'{folder_path}/label_mapping.json'
         label_mapping = cnn.load_label_mapping(label_mapping_path)
 
         y = cnn.convert_labels_to_one_hot(y, label_mapping)

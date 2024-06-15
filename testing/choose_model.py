@@ -12,9 +12,9 @@ def browse_file(canvas, text_id, folder_dir):
         canvas.itemconfig(text_id, text=f"{foldername}", font=("Arial", 14))
         folder_dir.set(foldername)
 
-
 def switch_to_choose_file_test_canvas(canvas, folder_dir):
-    detector = convolutionalNeuralNetwork(model_path=f'models/{folder_dir}/model')
+    folder_path = folder_dir.get()
+    detector = convolutionalNeuralNetwork(model_path=f'{folder_path}/model')
 
     canvas.delete("all")
     test_canvas = create_choose_file_test_canvas(canvas, detector, folder_dir)
