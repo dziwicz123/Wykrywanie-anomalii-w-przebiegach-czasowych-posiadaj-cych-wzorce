@@ -35,7 +35,7 @@ def show_stats(canvas):
     create_result_stats_canvas(canvas)
 
 
-def create_result_bar(result_bar_canvas, canvas):
+def create_result_bar_long(result_bar_canvas, canvas):
     create_button(result_bar_canvas, 0.0, 0.0, 167.0, 75.0, "Tabela", "Table")
     create_button(result_bar_canvas, 167.0, 0.0, 334.0, 75.0, "Wykres", "Chart")
     create_button(result_bar_canvas, 334.0, 0.0, 499.0, 75.0, "Macierz", "Matrix")
@@ -46,7 +46,14 @@ def create_result_bar(result_bar_canvas, canvas):
     result_bar_canvas.tag_bind("Matrix", "<Button-1>", lambda event: show_matrix(canvas))
     result_bar_canvas.tag_bind("Stats", "<Button-1>", lambda event: show_stats(canvas))
 
-def create_result_main_canvas(canvas):
+def create_result_bar_short(result_bar_canvas, canvas):
+    create_button(result_bar_canvas, 0.0, 0.0, 334.0, 75.0, "Tabela", "Table")
+    create_button(result_bar_canvas, 334.0, 0.0, 499+168.0, 75.0, "Wykres", "Chart")
+
+    result_bar_canvas.tag_bind("Table", "<Button-1>", lambda event: show_table(canvas))
+    result_bar_canvas.tag_bind("Chart", "<Button-1>", lambda event: show_plot(canvas))
+
+def create_result_main_canvas(canvas, is_labeled):
     root = canvas.winfo_toplevel()
 
     result_bar_canvas = Canvas(
@@ -60,7 +67,10 @@ def create_result_main_canvas(canvas):
     )
     result_bar_canvas.place(x=0, y=64)
 
-    create_result_bar(result_bar_canvas, canvas)
+    if(is_labeled == 1):
+        create_result_bar_long(result_bar_canvas, canvas)
+    else:
+        create_result_bar_short(result_bar_canvas, canvas)
 
     show_table(canvas)
 

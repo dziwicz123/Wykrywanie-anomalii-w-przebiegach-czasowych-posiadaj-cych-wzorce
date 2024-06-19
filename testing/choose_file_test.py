@@ -7,6 +7,9 @@ import convolutionalNeuralNetwork as cnn
 import numpy as np
 import pandas as pd
 
+variable1 = 0 #Pierwszy etykiety
+variable2 = 0 #Czy zawiera etykiety
+
 def browse_file(canvas, text_id, filename_var):
     filename = filedialog.askopenfilename(
         title="Wybierz plik",
@@ -17,13 +20,23 @@ def browse_file(canvas, text_id, filename_var):
         canvas.itemconfig(text_id, text=f"{filename}", font=("Arial", 14))
         filename_var.set(filename)
 
-def change_state(canvas, text_id, variable):
-    if(variable.get() == 0):
-        canvas.itemconfig(text_id, text="X")
-        variable.set(1)
+def change_state(canvas, text_id, pos):
+    global variable1, variable2
+    
+    if(pos==1):
+        if(variable1 == 0):
+            canvas.itemconfig(text_id, text="X")
+            variable1 = 1
+        else:
+            canvas.itemconfig(text_id, text="")
+            variable1 = 0
     else:
-        canvas.itemconfig(text_id, text="")
-        variable.set(0)
+        if(variable2 == 0):
+            canvas.itemconfig(text_id, text="X")
+            variable2 = 1
+        else:
+            canvas.itemconfig(text_id, text="")
+            variable2 = 0
 
 def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_labeled_in_first_col, is_labeled):
     file_path = file_dir.get()
@@ -72,7 +85,7 @@ def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_label
         }
 
     canvas.delete("all")
-    train_canvas = create_result_main_canvas(canvas)
+    train_canvas = create_result_main_canvas(canvas, is_labeled)
     train_canvas.pack(fill="both", expand=True)
 
 def create_choose_file_test_canvas(canvas, detector, model_dir):
@@ -93,9 +106,6 @@ def create_choose_file_test_canvas(canvas, detector, model_dir):
     filename_var = StringVar()
 
     canvas.tag_bind("Search", "<Button-1>", lambda event: browse_file(canvas, text_id, filename_var))
-
-    variable1 = IntVar() #Pierwszy etykiety
-    variable2 = IntVar() #Czy zawiera etykiety
 
     canvas.tag_bind("Checkbox1", "<Button-1>", lambda event: change_state(canvas, check_id1, variable1))
     canvas.tag_bind("Checkbox2", "<Button-1>", lambda event: change_state(canvas, check_id2, variable2))

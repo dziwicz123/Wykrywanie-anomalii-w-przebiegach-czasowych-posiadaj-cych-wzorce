@@ -12,6 +12,8 @@ from tensorflow.keras.utils import to_categorical
 
 from sklearn.preprocessing import LabelEncoder
 
+variable = 0
+
 def browse_file(canvas, text_id, filename_var):
     filename = filedialog.askopenfilename(
         title="Wybierz plik",
@@ -23,13 +25,15 @@ def browse_file(canvas, text_id, filename_var):
         filename_var.set(filename)
 
 
-def change_state(canvas, text_id, variable):
-    if variable.get() == 0:
+def change_state(canvas, text_id):
+    global variable
+
+    if variable == 0:
         canvas.itemconfig(text_id, text="X")
-        variable.set(1)
+        variable = 1
     else:
         canvas.itemconfig(text_id, text="")
-        variable.set(0)
+        variable = 0
 
 
 def switch_to_save_model_canvas(canvas, filename_var, variable):
@@ -38,7 +42,8 @@ def switch_to_save_model_canvas(canvas, filename_var, variable):
 
     df = pd.read_csv(filename)
 
-    if variable.get() == 1:
+    print(variable)
+    if variable == 1:
         y = df.iloc[:, 0].values
         X = df.drop(df.columns[0], axis=1).values
     else:
@@ -92,11 +97,10 @@ def create_choose_file_train_canvas(canvas):
 
     create_button(canvas, 180.0, 526.0, 465.0, 601.0, "Dalej", "Next")
 
-    variable = IntVar()
     filename_var = StringVar()
 
     canvas.tag_bind("Search", "<Button-1>", lambda event: browse_file(canvas, text_id, filename_var))
-    canvas.tag_bind("Checkbox", "<Button-1>", lambda event: change_state(canvas, check_id, variable))
+    canvas.tag_bind("Checkbox", "<Button-1>", lambda event: change_state(canvas, check_id))
     canvas.tag_bind("Next", "<Button-1>", lambda event: switch_to_save_model_canvas(canvas, filename_var, variable))
 
     return canvas
