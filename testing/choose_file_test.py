@@ -63,30 +63,28 @@ def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_label
 
     X = np.expand_dims(X, axis=-1)
 
+    inverse_label_mapping = {np.argmax(v): k for k, v in label_mapping.items()}
+
     if y is not None:
         predictions = detector.model.predict(X)
-        predicted_labels = np.argmax(predictions, axis=1)
-        true_labels = np.argmax(y, axis=1)
+        predicted_labels_indices = np.argmax(predictions, axis=1)
+        predicted_labels = [inverse_label_mapping[idx] for idx in predicted_labels_indices]
+        true_labels_indices = np.argmax(y, axis=1)
+        true_labels = [inverse_label_mapping[idx] for idx in true_labels_indices]
 
-        accuracy = np.mean(predicted_labels == true_labels)
-        print(f"Accuracy: {accuracy}")
+        canvas.delete("all")
+        train_canvas = create_result_main_canvas(canvas, X, predicted_labels, true_labels=true_labels)
+        train_canvas.pack(fill="both", expand=True)
 
-        results = {
-            'true_labels': true_labels,
-            'predicted_labels': predicted_labels,
-            'accuracy': accuracy
-        }
     else:
         predictions = detector.model.predict(X)
-        predicted_labels = np.argmax(predictions, axis=1)
+        predicted_labels_indices = np.argmax(predictions, axis=1)
+        predicted_labels = [inverse_label_mapping[idx] for idx in predicted_labels_indices]
 
-        results = {
-            'predicted_labels': predicted_labels
-        }
+        canvas.delete("all")
+        train_canvas = create_result_main_canvas(canvas, X, predicted_labels)
+        train_canvas.pack(fill="both", expand=True)
 
-    canvas.delete("all")
-    train_canvas = create_result_main_canvas(canvas, is_labeled)
-    train_canvas.pack(fill="both", expand=True)
 
 def create_choose_file_test_canvas(canvas, detector, model_dir):
     create_my_text(canvas, 59, 103, "Plik z danymi", "w")

@@ -37,12 +37,10 @@ def plot_confusion_matrix(canvas, labels, predictions, class_names):
     return window_id
 
 
-def create_result_matrix_canvas(canvas):
-    
-    labels = [0, 1, 0, 1, 0, 1, 0, 1, 1, 0]
-    predictions = [0, 1, 0, 1, 0, 0, 1, 1, 1, 0]
-    class_names = ['0', '1']
+def create_result_matrix_canvas(canvas, predicted_labels, true_labels):
 
-    plot_confusion_matrix(canvas, labels, predictions, class_names)
+    class_names = [str(class_name) for class_name in np.unique(true_labels)]
+
+    plot_confusion_matrix(canvas, true_labels, predicted_labels, class_names)
     
     return canvas

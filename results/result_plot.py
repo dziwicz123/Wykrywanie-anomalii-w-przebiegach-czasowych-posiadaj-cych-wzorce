@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageTk
 
-def create_plot_canvas(canvas, series_number=1):
+
+def create_plot_canvas(canvas, series_data, series_number=1):
     create_my_text(canvas, 60, 160, "Wybierz serię danych", "nw")
 
-    x = np.linspace(0, 10, 100)
-    y = np.sin(x)
+    # Generowanie osi X jako indeksy serii danych
+    x = np.arange(len(series_data))
+    y = series_data
 
     fig, ax = plt.subplots(figsize=(5.5, 3.5))
     ax.plot(x, y)
@@ -19,7 +21,8 @@ def create_plot_canvas(canvas, series_number=1):
     tk_image = ImageTk.PhotoImage(image=pil_image)
 
     canvas.create_image(60, 300, anchor='nw', image=tk_image)
-    
+
     canvas.image = tk_image
 
     return canvas
+

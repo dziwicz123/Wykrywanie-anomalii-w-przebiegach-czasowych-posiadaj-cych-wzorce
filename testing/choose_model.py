@@ -2,14 +2,21 @@ from tkinter import Frame, Label, filedialog, IntVar, StringVar
 from creator import create_button, create_my_text
 from testing.choose_file_test import create_choose_file_test_canvas
 from convolutionalNeuralNetwork import convolutionalNeuralNetwork
+import os
+from pathlib import Path
 
 def browse_file(canvas, text_id, folder_dir):
+    project_folder = Path(__file__).resolve().parents[1]
+    default_dir = project_folder / 'models'
+
     foldername = filedialog.askdirectory(
+        initialdir=str(default_dir),
         title="Wybierz folder modelu",
     )
     if foldername:
         print(f"Wybrano folder: {foldername}")
-        canvas.itemconfig(text_id, text=f"{foldername}", font=("Arial", 14))
+        file_basename = os.path.basename(foldername)
+        canvas.itemconfig(text_id, text=f"{file_basename}", font=("Arial", 14))
         folder_dir.set(foldername)
 
 def switch_to_choose_file_test_canvas(canvas, folder_dir):
