@@ -38,14 +38,14 @@ def change_state(canvas, text_id, pos):
             canvas.itemconfig(text_id, text="")
             variable2 = 0
 
-def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_labeled_in_first_col, is_labeled):
+def switch_to_result_main_canvas(canvas, detector, model_dir, file_dir, is_labeled=None, is_labeled_in_first_col=None):
     file_path = file_dir.get()
     data = pd.read_csv(file_path)
 
     folder_path = model_dir.get()
 
-    if is_labeled.get() == 1:
-        if is_labeled_in_first_col.get() == 1:
+    if is_labeled is not None and is_labeled_in_first_col is not None and is_labeled == 1:
+        if is_labeled_in_first_col == 1:
             y = data.iloc[:, 0].values
             X = data.drop(data.columns[0], axis=1).values
         else:
@@ -110,6 +110,6 @@ def create_choose_file_test_canvas(canvas, detector, model_dir):
     canvas.tag_bind("Checkbox1", "<Button-1>", lambda event: change_state(canvas, check_id1, variable1))
     canvas.tag_bind("Checkbox2", "<Button-1>", lambda event: change_state(canvas, check_id2, variable2))
 
-    canvas.tag_bind("Next", "<Button-1>", lambda event: switch_to_result_main_canvas(canvas, detector, model_dir, filename_var, variable1, variable2))
+    canvas.tag_bind("Next", "<Button-1>", lambda event: switch_to_result_main_canvas(canvas, detector, model_dir, filename_var, is_labeled=variable2, is_labeled_in_first_col=variable1))
 
     return canvas

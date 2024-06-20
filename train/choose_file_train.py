@@ -60,7 +60,7 @@ def switch_to_save_model_canvas(canvas, filename_var, variable):
 
     input_shape = (X.shape[1], 1)
 
-    detector = convolutionalNeuralNetwork(input_shape, num_classes)
+    detector = convolutionalNeuralNetwork(input_shape = input_shape, num_classes = num_classes)
     detector._build_model()
 
     start_time = time.time()

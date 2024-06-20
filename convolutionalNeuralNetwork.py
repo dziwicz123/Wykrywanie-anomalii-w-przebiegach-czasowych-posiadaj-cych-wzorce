@@ -12,17 +12,17 @@ import time
 import json
 
 class convolutionalNeuralNetwork:
-    def __init__(self, input_shape, num_classes):
-        self.input_shape = input_shape
-        self.num_classes = num_classes
-        self.model = None
-
-    def __init__(self, model_path=None):
+    def __init__(self, input_shape=None, num_classes=None, model_path=None):
         if model_path:
             self.model = load_model(model_path)
             print(f"Model loaded from {model_path}")
-        else:
+        elif input_shape is not None and num_classes is not None:
+            self.input_shape = input_shape
+            self.num_classes = num_classes
             self.model = None
+            self._build_model()
+        else:
+            raise ValueError("Either model_path or both input_shape and num_classes must be provided")
 
     @staticmethod
     def estimate_parameters(data):
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     input_shape = (X_train.shape[1], 1)
 
-    detector = convolutionalNeuralNetwork(input_shape, num_classes)
+    detector = convolutionalNeuralNetwork(input_shape = input_shape, num_classes = num_classes)
     detector._build_model()
 
     start_time = time.time()
